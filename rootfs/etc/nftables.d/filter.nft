@@ -1,0 +1,10 @@
+table inet filter {
+    chain input {
+        tcp dport 2049 accept
+        udp dport 2049 accept
+        tcp dport 5572 accept
+    }
+    chain forward {
+        type filter hook forward priority filter; policy accept;
+    }
+}

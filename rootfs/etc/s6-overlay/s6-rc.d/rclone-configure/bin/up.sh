@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+
+: ${DIRECTORY}
+: ${WEBDAV_ENDPOINT}
+: ${WEBDAV_PASSWORD}
+: ${WEBDAV_USERNAME}
+
+OBSCURED_WEBDAV_PASSWORD=$(echo "$WEBDAV_PASSWORD" | rclone obscure -)
+
+unset WEBDAV_PASSWORD
+
+echo "user_allow_other" >> /etc/fuse.conf
+
+mkdir -p \
+    /etc/rclone \
+    /mnt/rclone
+
+cat << EOF >> /etc/rclone/rclone.conf
+[remote]
+type = webdav
+vendor = other
+url = ${WEBDAV_ENDPOINT}
+user = ${WEBDAV_USERNAME}
+pass = ${OBSCURED_WEBDAV_PASSWORD}
+EOF
+
+unset OBSCURED_WEBDAV_PASSWORD
+
+rclone mkdir --config=/etc/rclone/rclone.conf "remote:${DIRECTORY}"
+
+sed -i "s|^url = \(.*\)|url = \1${DIRECTORY}|" /etc/rclone/rclone.conf
