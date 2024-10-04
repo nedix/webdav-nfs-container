@@ -39,7 +39,7 @@ jobs:
       - name: Renovate dependencies
         uses: renovatebot/github-action@v40.3.1
         with:
-          renovate-version: 38.109.0
+          renovate-version: 38.110.1
           token: ${{ steps.renovate-app-token.outputs.token }}
         env:
           LOG_LEVEL: debug
