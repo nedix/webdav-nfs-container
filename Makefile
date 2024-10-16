@@ -9,9 +9,9 @@ up:
 		--cap-add SYS_ADMIN \
 		--device /dev/fuse \
         --env-file .env \
+        -v /sys/fs/cgroup/webdav-nfs:/sys/fs/cgroup:rw \
         -p 127.0.0.1:$(NFS_PORT):2049 \
         -p 127.0.0.1:$(RCLONE_PORT):5572 \
-        -v /sys/fs/cgroup/webdav-nfs:/sys/fs/cgroup:rw \
         webdav-nfs
 
 down:
