@@ -23,19 +23,19 @@ wget -q https://raw.githubusercontent.com/nedix/webdav-nfs-container/main/docs/e
 docker compose up -d
 ```
 
-#### 3. Browse the webdav directory from inside an example service
+#### 3. Browse the webdav directory from inside the example service
 
 ```shell
 docker compose exec example-service ls /data
 ```
 
-### Mount as a local directory
+### As a directory mount
 
 This example mounts the webdav directory to a local directory named `webdav-nfs`.
 
-#### 1. Start the server
+#### 1. Start the service
 
-This command starts the NFS server on localhost port `2049`.
+This command starts the NFS service on localhost port `2049`.
 
 ```shell
 docker run --pull always --name webdav-nfs \
