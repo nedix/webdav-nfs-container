@@ -35,8 +35,6 @@ This example mounts the webdav directory to a local directory named `webdav-nfs`
 
 #### 1. Start the service
 
-This command starts the NFS service on localhost port `2049`.
-
 ```shell
 docker run --pull always --name webdav-nfs \
     --cap-add SYS_ADMIN --device /dev/fuse \ # fuse priviliges, these might not be necessary in the future
