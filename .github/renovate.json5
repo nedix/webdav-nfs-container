@@ -5,11 +5,13 @@
   customManagers: [
     {
       depNameTemplate: "Alpine",
-      fileMatch: ["^Dockerfile$"],
+      fileMatch: ["^Containerfile$"],
       matchStrings: ["ARG ALPINE_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "docker",
       packageNameTemplate: "alpine",
     },
+    // TODO: RCLONE_VERSION=1.67.0
+    // TODO: RCLONE_WEBUI_VERSION=2.0.5
   ],
   packageRules: [
   ],
