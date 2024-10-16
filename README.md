@@ -4,7 +4,7 @@ Mount a webdav directory as an NFS filesystem to use it as a Docker or Docker Co
 
 ## Usage
 
-### Mount as a Compose volume
+### As a Compose volume
 
 The example Compose manifest will start the webdav-nfs service on localhost port `2049`.
 It will then make the NFS filesystem available to other services by configuring it as a volume.
@@ -31,7 +31,7 @@ docker compose exec example-service ls /data
 
 ### Mount as a local directory
 
-These commands mount the webdav directory to a local directory named `webdav-nfs`.
+This example mounts the webdav directory to a local directory named `webdav-nfs`.
 
 #### 1. Start the server
 
