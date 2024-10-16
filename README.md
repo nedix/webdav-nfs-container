@@ -27,7 +27,7 @@ mkdir webdav-nfs \
 && mount -v -o vers=4 -o port=2049 127.0.0.1:/ ./webdav-nfs
 ```
 
-#### (Option 2.) Use as a Docker Compose volume
+#### (Option 2.) Use as a Compose volume
 
 The example Compose manifest will start the webdav-nfs service on localhost port `2049`.
 It will then make the NFS filesystem available to other services by configuring it as a volume.
@@ -35,7 +35,7 @@ The `service_healthy` condition ensures that a connection to a webdav directory 
 Multiple services can use the same volume.
 
 ```shell
-wget -q https://raw.githubusercontent.com/nedix/webdav-nfs-container/refs/heads/main/docs/examples/compose.yml
+wget -q https://raw.githubusercontent.com/nedix/webdav-nfs-container/main/docs/examples/compose.yml
 docker compose up -d
 docker compose exec example-service ls /data
 ```
