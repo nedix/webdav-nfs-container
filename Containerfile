@@ -1,11 +1,31 @@
 ARG ALPINE_VERSION=3.20
 ARG RCLONE_VERSION=1.67.0
 ARG RCLONE_WEBUI_VERSION=2.0.5
+ARG S6_OVERLAY_VERSION=3.2.0.0
 ARG STARTUP_TIMEOUT=30
+
+FROM alpine:${ALPINE_VERSION} AS base
+
+ARG S6_OVERLAY_VERSION
+
+RUN apk add --virtual .build-deps \
+        xz \
+    && case "$(uname -m)" in \
+        aarch64|arm*) \
+            CPU_ARCHITECTURE="aarch64" \
+        ;; x86_64) \
+            CPU_ARCHITECTURE="x86_64" \
+        ;; *) echo "Unsupported architecture: $(uname -m)"; exit 1; ;; \
+    esac \
+    && wget -qO- "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz" \
+    | tar -xpJf- -C / \
+    && wget -qO- "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${CPU_ARCHITECTURE}.tar.xz" \
+    | tar -xpJf- -C / \
+    && apk del .build-deps
 
 FROM rclone/rclone:${RCLONE_VERSION} AS rclone
 
-FROM alpine:${ALPINE_VERSION} AS rclone-webui
+FROM base AS rclone-webui
 
 ARG RCLONE_WEBUI_VERSION
 
@@ -16,21 +36,13 @@ RUN wget -qO- "https://github.com/rclone/rclone-webui-react/releases/download/v$
     && mkdir -p /var/rclone/webgui \
     && mv -T build /var/rclone/webgui
 
-FROM alpine:${ALPINE_VERSION}
+FROM base
 
 ARG STARTUP_TIMEOUT
 
 RUN apk add \
         fuse3 \
-        iptables \
-        nfs-utils \
-        nftables \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
-    && apk add \
-        s6-overlay \
-        skalibs-dev
+        nfs-utils
 
 COPY --link --from=rclone /usr/local/bin/rclone /usr/bin/
 COPY --link --from=rclone-webui /var/rclone/webgui/ /var/rclone/webgui/

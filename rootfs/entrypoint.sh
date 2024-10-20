@@ -41,8 +41,6 @@ ROOT_DIRECTORY="${ROOT_DIRECTORY%/}/"
         echo "${ROOT_DIRECTORY}" > /run/rclone-configure/environment/DIRECTORY
     fi
 
-    chmod -R 400 /run/rclone-configure/environment
-
     # -------------------------------------------------------------------------------
     #    Create rclone-mount environment
     # -------------------------------------------------------------------------------
@@ -55,47 +53,18 @@ ROOT_DIRECTORY="${ROOT_DIRECTORY%/}/"
     echo "$CACHE_READ_AHEAD"     > /run/rclone-mount/environment/CACHE_READ_AHEAD
     echo "$CACHE_WRITE_BACK"     > /run/rclone-mount/environment/CACHE_WRITE_BACK
 
-    chmod -R 400 /run/rclone-mount/environment
-
     # -------------------------------------------------------------------------------
     #    Create rclone-refresh environment
     # -------------------------------------------------------------------------------
     mkdir -p /run/rclone-refresh/environment
 
     echo "$DIR_CACHE_TIME" > /run/rclone-refresh/environment/DIR_CACHE_TIME
-
-    chmod -R 400 /run/rclone-refresh/environment
 }
-
-# -------------------------------------------------------------------------------
-#    Create executables
-# -------------------------------------------------------------------------------
-for BIN in /etc/s6-overlay/s6-rc.d/*/bin/*.sh; do
-    ENVIRONMENT=$(echo "$BIN" | sed "s|/etc/s6-overlay/s6-rc\.d/\(.*\)/bin/.*\.sh|/run/\1/environment|")
-    SCRIPT=$(echo "$BIN" | sed "s|\(/etc/s6-overlay/s6-rc\.d/.*/\)bin/\(.*\)\.sh|\1\2|")
-    SERVICE=$(echo "$BIN" | sed "s|/etc/s6-overlay/s6-rc\.d/\(.*\)/bin/.*\.sh|\1|")
-
-    if [ -f "$SCRIPT" ]; then
-        continue
-    fi
-
-    if [ -d "$ENVIRONMENT" ]; then
-cat << EOF > "$SCRIPT"
-#!/usr/bin/execlineb -P
-exec s6-envdir "$ENVIRONMENT" "$BIN"
-EOF
-    else
-cat << EOF > "$SCRIPT"
-#!/usr/bin/execlineb -P
-exec "$BIN"
-EOF
-    fi
-done
 
 # -------------------------------------------------------------------------------
 #    Let's go!
 # -------------------------------------------------------------------------------
 exec env -i \
-    PATH="/opt/webdav-nfs/bin:${PATH}" \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME="$(( $STARTUP_TIMEOUT * 1000 ))" \
+    S6_STAGE2_HOOK=/sbin/s6-stage2-hook \
     /init
