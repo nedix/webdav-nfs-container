@@ -10,8 +10,14 @@
       datasourceTemplate: "docker",
       packageNameTemplate: "alpine",
     },
-    // TODO: RCLONE_VERSION=1.67.0
-    // TODO: RCLONE_WEBUI_VERSION=2.0.5
+    {
+      depNameTemplate: "Rclone",
+      fileMatch: ["^Containerfile$"],
+      matchStrings: ["ARG RCLONE_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "docker",
+      packageNameTemplate: "rclone/rclone",
+    },
+    // TODO: RCLONE_WEBUI_VERSION
   ],
   packageRules: [
   ],
