@@ -7,20 +7,16 @@
 : ${CACHE_READ_AHEAD:=0}
 : ${CACHE_WRITE_BACK}
 : ${DIR_CACHE_TIME:=10}
-: ${HOME_DIRECTORY}
-: ${NFS_PASSWORD}
-: ${NFS_ROOT_PASSWORD}
+: ${NFS_PASSWORD_HASH}
 : ${NFS_USERNAME}
-: ${ROOT_DIRECTORY}
 : ${STARTUP_TIMEOUT}
+: ${WEBDAV_DIRECTORY}
 : ${WEBDAV_ENDPOINT}
 : ${WEBDAV_PASSWORD}
 : ${WEBDAV_USERNAME}
 
-HOME_DIRECTORY="/${HOME_DIRECTORY#/}"
-HOME_DIRECTORY="${HOME_DIRECTORY%/}/"
-ROOT_DIRECTORY="/${ROOT_DIRECTORY#/}"
-ROOT_DIRECTORY="${ROOT_DIRECTORY%/}/"
+WEBDAV_DIRECTORY="/${WEBDAV_DIRECTORY#/}"
+WEBDAV_DIRECTORY="${WEBDAV_DIRECTORY%/}/"
 
 # -------------------------------------------------------------------------------
 #    Bootstrap rclone services
@@ -31,15 +27,10 @@ ROOT_DIRECTORY="${ROOT_DIRECTORY%/}/"
     # -------------------------------------------------------------------------------
     mkdir -p /run/rclone-configure/environment
 
-    echo "$WEBDAV_USERNAME" > /run/rclone-configure/environment/WEBDAV_USERNAME
-    echo "$WEBDAV_ENDPOINT" > /run/rclone-configure/environment/WEBDAV_ENDPOINT
-    echo "$WEBDAV_PASSWORD" > /run/rclone-configure/environment/WEBDAV_PASSWORD
-
-    if [ -z "$NFS_ROOT_PASSWORD" ]; then \
-        echo "${ROOT_DIRECTORY%/}${HOME_DIRECTORY%/}/${NFS_USERNAME}" > /run/rclone-configure/environment/DIRECTORY
-    else
-        echo "${ROOT_DIRECTORY}" > /run/rclone-configure/environment/DIRECTORY
-    fi
+    echo "$WEBDAV_DIRECTORY" > /run/rclone-configure/environment/WEBDAV_DIRECTORY
+    echo "$WEBDAV_ENDPOINT"  > /run/rclone-configure/environment/WEBDAV_ENDPOINT
+    echo "$WEBDAV_PASSWORD"  > /run/rclone-configure/environment/WEBDAV_PASSWORD
+    echo "$WEBDAV_USERNAME"  > /run/rclone-configure/environment/WEBDAV_USERNAME
 
     # -------------------------------------------------------------------------------
     #    Create rclone-mount environment
@@ -62,9 +53,22 @@ ROOT_DIRECTORY="${ROOT_DIRECTORY%/}/"
 }
 
 # -------------------------------------------------------------------------------
+#    Bootstrap nfs services
+# -------------------------------------------------------------------------------
+{
+    # -------------------------------------------------------------------------------
+    #    Create nfs-configure environment
+    # -------------------------------------------------------------------------------
+    mkdir -p /run/nfs-configure/environment
+
+    echo "$NFS_PASSWORD_HASH" > /run/nfs-configure/environment/NFS_PASSWORD_HASH
+    echo "$NFS_USERNAME"      > /run/nfs-configure/environment/NFS_USERNAME
+}
+
+# -------------------------------------------------------------------------------
 #    Let's go!
 # -------------------------------------------------------------------------------
 exec env -i \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME="$(( $STARTUP_TIMEOUT * 1000 ))" \
-    S6_STAGE2_HOOK=/sbin/s6-stage2-hook \
+    S6_STAGE2_HOOK="/usr/sbin/s6-stage2-hook" \
     /init
