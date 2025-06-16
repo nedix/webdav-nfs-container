@@ -9,7 +9,6 @@
 : ${DIR_CACHE_TIME:=10}
 : ${NFS_PASSWORD_HASH}
 : ${NFS_USERNAME}
-: ${STARTUP_TIMEOUT}
 : ${WEBDAV_DIRECTORY}
 : ${WEBDAV_ENDPOINT}
 : ${WEBDAV_PASSWORD}
@@ -69,6 +68,5 @@ WEBDAV_DIRECTORY="${WEBDAV_DIRECTORY%/}/"
 #    Let's go!
 # -------------------------------------------------------------------------------
 exec env -i \
-    S6_CMD_WAIT_FOR_SERVICES_MAXTIME="$(( $STARTUP_TIMEOUT * 1000 ))" \
-    S6_STAGE2_HOOK="/usr/sbin/s6-stage2-hook" \
+    S6_STAGE2_HOOK="/usr/bin/s6-stage2-hook" \
     /init
