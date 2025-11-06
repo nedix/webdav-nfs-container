@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-: ${DIRECTORY}
+: ${WEBDAV_DIRECTORY}
 : ${WEBDAV_ENDPOINT}
 : ${WEBDAV_PASSWORD}
 : ${WEBDAV_USERNAME}
@@ -26,6 +26,6 @@ EOF
 
 unset OBSCURED_WEBDAV_PASSWORD
 
-rclone mkdir --config=/etc/rclone/rclone.conf "remote:${DIRECTORY}"
+rclone mkdir --config=/etc/rclone/rclone.conf "remote:${WEBDAV_DIRECTORY}"
 
-sed -i "s|^url = \(.*\)|url = \1${DIRECTORY}|" /etc/rclone/rclone.conf
+sed -i "s|^url = \(.*\)|url = \1${WEBDAV_DIRECTORY}|" /etc/rclone/rclone.conf
