@@ -65,4 +65,4 @@ mount -v -o vers=4 -o port=2049 127.0.0.1:/ ./webdav-nfs
 ```
 
 
-[project]: https://hub.docker.com/r/nedix/bitcoin
+[project]: https://hub.docker.com/r/nedix/webdav-nfs
