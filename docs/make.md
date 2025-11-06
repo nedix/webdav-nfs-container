@@ -26,7 +26,7 @@ Options:
 
 | Option key  | Default value |
 |-------------|---------------|
-| NFS_PORT    | 2049          |
+| FORWARD_NFS_PORT    | 2049          |
 | RCLONE_PORT | 5572          |
 
 

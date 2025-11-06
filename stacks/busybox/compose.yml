@@ -1,18 +1,22 @@
 services:
   webdav-nfs:
     image: nedix/webdav-nfs
+    build:
+      context: ../../
+      dockerfile: Containerfile
     cap_add:
       - SYS_ADMIN
     devices:
       - /dev/fuse:/dev/fuse:rwm
     environment:
+      WEBDAV_DIRECTORY: ${WEBDAV_DIRECTORY}
       WEBDAV_ENDPOINT: ${WEBDAV_ENDPOINT}
       WEBDAV_PASSWORD: ${WEBDAV_PASSWORD}
       WEBDAV_USERNAME: ${WEBDAV_USERNAME}
     ports:
-      - 127.0.0.1:${NFS_PORT:=2049}:2049
+      - 127.0.0.1:${FORWARD_NFS_PORT}:2049
 
-  example-container:
+  busybox:
     image: busybox
     volumes:
       - webdav-nfs:/data
@@ -24,5 +28,5 @@ volumes:
   webdav-nfs:
     driver_opts:
       type: 'nfs'
-      o: 'vers=4,addr=127.0.0.1,port=${NFS_PORT:=2049},rw'
+      o: 'vers=4,addr=127.0.0.1,port=${FORWARD_NFS_PORT},rw'
       device: ':/'

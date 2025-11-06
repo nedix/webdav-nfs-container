@@ -43,9 +43,10 @@ The following example will mount the remote webdav directory to a local director
 docker run --rm --pull always --name webdav-nfs \
     --cap-add SYS_ADMIN --device /dev/fuse \
     -p 127.0.0.1:2049:2049 \
-    -e WEBDAV_ENDPOINT=foo \
-    -e WEBDAV_USERNAME=bar \
+    -e WEBDAV_DIRECTORY=foo \
+    -e WEBDAV_ENDPOINT=bar \
     -e WEBDAV_PASSWORD=baz \
+    -e WEBDAV_USERNAME=qux \
     --restart unless-stopped \
     nedix/webdav-nfs
 ```
