@@ -46,10 +46,10 @@ docker run \
     --name webdav-nfs \
     --pull always \
     --rm \
-    -e WEBDAV_DIRECTORY=foo \
-    -e WEBDAV_ENDPOINT=bar \
-    -e WEBDAV_PASSWORD=baz \
-    -e WEBDAV_USERNAME=qux \
+    -e WEBDAV_DIRECTORY "foo" \
+    -e WEBDAV_ENDPOINT "bar" \
+    -e WEBDAV_PASSWORD "baz" \
+    -e WEBDAV_USERNAME "qux" \
     -p 127.0.0.1:2049:2049 \
     nedix/webdav-nfs
 ```
