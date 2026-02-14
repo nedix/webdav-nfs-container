@@ -27,6 +27,6 @@ services:
 volumes:
   webdav-nfs:
     driver_opts:
-      type: 'nfs'
-      o: 'vers=4,addr=127.0.0.1,port=${FORWARD_NFS_PORT},rw'
-      device: ':/'
+      type: nfs
+      o: vers=4,addr=127.0.0.1,port=${FORWARD_NFS_PORT},rw
+      device: :/
