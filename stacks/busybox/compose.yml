@@ -4,17 +4,16 @@ services:
     build:
       context: ../../
       dockerfile: Containerfile
-    cap_add:
-      - SYS_ADMIN
+    privileged: true
     devices:
       - /dev/fuse:/dev/fuse:rwm
     environment:
-      WEBDAV_DIRECTORY: ${WEBDAV_DIRECTORY}
-      WEBDAV_ENDPOINT: ${WEBDAV_ENDPOINT}
-      WEBDAV_PASSWORD: ${WEBDAV_PASSWORD}
-      WEBDAV_USERNAME: ${WEBDAV_USERNAME}
+      WEBDAV_DIRECTORY: "$WEBDAV_DIRECTORY"
+      WEBDAV_ENDPOINT: "$WEBDAV_ENDPOINT"
+      WEBDAV_PASSWORD: "$WEBDAV_PASSWORD"
+      WEBDAV_USERNAME: "$WEBDAV_USERNAME"
     ports:
-      - 127.0.0.1:${FORWARD_NFS_PORT}:2049
+      - "127.0.0.1:${FORWARD_NFS_PORT}:2049"
 
   busybox:
     image: busybox
@@ -27,6 +26,6 @@ services:
 volumes:
   webdav-nfs:
     driver_opts:
-      type: nfs
-      o: vers=4,addr=127.0.0.1,port=${FORWARD_NFS_PORT},rw
       device: :/
+      o: "vers=4,addr=127.0.0.1,port=${FORWARD_NFS_PORT},rw"
+      type: nfs
