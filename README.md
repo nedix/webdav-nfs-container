@@ -14,21 +14,21 @@ Multiple services can use the same volume.
 ### 1. Create the Compose manifest
 
 ```shell
-wget https://raw.githubusercontent.com/nedix/webdav-nfs-container/main/docs/examples/compose.yml
+wget https://raw.githubusercontent.com/nedix/webdav-nfs-container/main/stacks/busybox/compose.yml
 ```
 
 
-### 2. Start the container
+### 2. Start the services
 
 ```shell
 docker compose up -d
 ```
 
 
-### 3. Browse the webdav contents from within the example container
+### 3. Browse the webdav contents from within the busybox container
 
 ```shell
-docker compose exec example-container ls /data
+docker compose exec busybox ls /data
 ```
 
 
