@@ -18,6 +18,13 @@
       packageNameTemplate: "rclone/rclone",
     },
     {
+      depNameTemplate: "Rclone Web UI",
+      fileMatch: ["^Containerfile$"],
+      matchStrings: ["ARG RCLONE_WEBUI_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "github-tags",
+      packageNameTemplate: "rclone/rclone-webui-react",
+    },
+    {
       depNameTemplate: "s6-overlay",
       fileMatch: ["^Containerfile$"],
       matchStrings: ["ARG S6_OVERLAY_VERSION=(?<currentValue>.*?)\\n"],
@@ -26,6 +33,11 @@
     },
   ],
   packageRules: [
+    {
+      description: "Custom versioning for Rclone Web UI",
+      matchPackageNames: ["rclone/rclone-webui-react"],
+      extractVersion: "^v(?<version>.*)$",
+    },
     {
       description: "Custom versioning for s6-overlay",
       matchPackageNames: ["just-containers/s6-overlay"],
