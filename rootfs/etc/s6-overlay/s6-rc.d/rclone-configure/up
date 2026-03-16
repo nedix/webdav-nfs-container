@@ -9,8 +9,6 @@ OBSCURED_WEBDAV_PASSWORD=$(echo "$WEBDAV_PASSWORD" | rclone obscure -)
 
 unset WEBDAV_PASSWORD
 
-echo "user_allow_other" >> /etc/fuse.conf
-
 mkdir -p \
     /etc/rclone \
     /data
