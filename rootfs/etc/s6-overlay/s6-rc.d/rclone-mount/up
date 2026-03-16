@@ -71,6 +71,6 @@ EOF
 /usr/bin/rclone rc \
     mount/mount \
     fs=remote: \
-    mountPoint=/data \
+    mountPoint="/data/" \
     mountOpt="$(mount_options)" \
     vfsOpt="$(vfs_options)"
